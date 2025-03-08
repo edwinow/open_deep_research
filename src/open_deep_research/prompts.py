@@ -1,112 +1,143 @@
-report_planner_query_writer_instructions="""You are performing research for a report. 
+report_planner_query_writer_instructions = """You are performing background research to provide context for a {document_type}. 
 
 <Report topic>
 {topic}
 </Report topic>
 
-<Report organization>
+<Document-Organization>
 {report_organization}
-</Report organization>
+</Document-Organization>
+
+<Document-Objective>
+{objective}
+</Document-Objective>
 
 <Task>
-Your goal is to generate {number_of_queries} web search queries that will help gather information for planning the report sections. 
+Your goal is to generate {number_of_queries} web search queries that will help gather information for planning the {document_type} sections. 
 
 The queries should:
 
-1. Be related to the Report topic
+1. Be related to the main topic
 2. Help satisfy the requirements specified in the report organization
+3. Find practical implementation guidance
+4. Uncover specific examples, templates, tools, and real-world applications
+5. Target both foundational knowledge and efficient implementation techniques
 
-Make the queries specific enough to find high-quality, relevant sources while covering the breadth needed for the report structure.
+Make the queries specific enough to find high-quality, relevant sources while covering the breadth needed for the structure.
+
+For technical topics, include queries for code examples, implementation guides, and step-by-step tutorials.
+For practical topics, include queries for worked examples, resource collections, and implementation checklists.
 </Task>
 """
 
-report_planner_instructions="""I want a plan for a report that is concise and focused.
+report_planner_instructions = """I want a plan for a {document_type} that is concise and focused on actionable insights.
 
-<Report topic>
-The topic of the report is:
+<Topic>
+The topic is:
 {topic}
-</Report topic>
+</Topic>
 
-<Report organization>
-The report should follow this organization: 
+<Document-Organization>
+This should follow this organization: 
 {report_organization}
-</Report organization>
+</Document-Organization>
+
+<Document-Objective>
+{objective}
+</Document-Objective>
 
 <Context>
-Here is context to use to plan the sections of the report: 
+Here is context to use to plan the sections of the {document_type}: 
 {context}
 </Context>
 
 <Task>
-Generate a list of sections for the report. Your plan should be tight and focused with NO overlapping sections or unnecessary filler. 
+Generate a list of sections for the {document_type}. Your plan should be tight and focused with NO overlapping sections or unnecessary filler. 
 
-For example, a good report structure might look like:
-1/ intro
-2/ overview of topic A
-3/ overview of topic B
-4/ comparison between A and B
-5/ conclusion
+The {document_type} should be focused on actionable insights with specific implementation steps and concrete examples.
+
+For example, a good structure might look like:
+1/ Overview & Objective
+2/ Context & Background
+3/ Implementation Approach
+4/ Step-by-Step Implementation 
+5/ Resources & Examples
+6/ Evaluation & Next Steps
 
 Each section should have the fields:
 
-- Name - Name for this section of the report.
+- Name - Name for this section of the {document_type}.
 - Description - Brief overview of the main topics covered in this section.
-- Research - Whether to perform web research for this section of the report.
+- Research - Whether to perform web research for this section of the {document_type}.
 - Content - The content of the section, which you will leave blank for now.
 
 Integration guidelines:
 - Include examples and implementation details within main topic sections, not as separate sections
 - Ensure each section has a distinct purpose with no content overlap
 - Combine related concepts rather than separating them
+- For technical topics, ensure sections cover practical implementation, code examples, and best practices
+- For business topics, ensure sections include case studies, practical applications, and metrics
 
 Before submitting, review your structure to ensure it has no redundant sections and follows a logical flow.
 </Task>
 
 <Feedback>
-Here is feedback on the report structure from review (if any):
+Here is feedback on the structure from review (if any):
 {feedback}
 </Feedback>
 """
 
-query_writer_instructions="""You are an expert technical writer crafting targeted web search queries that will gather comprehensive information for writing a technical report section.
+query_writer_instructions = """You are an expert technical writer crafting targeted web search queries that will gather comprehensive information for writing a {document_type} section.
 
-<Report topic>
+<Topic>
 {topic}
-</Report topic>
+</Topic>
 
 <Section topic>
 {section_topic}
 </Section topic>
 
+<Document-Objective>
+{objective}
+</Document-Objective>
+
 <Task>
-Your goal is to generate {number_of_queries} search queries that will help gather comprehensive information above the section topic. 
+Your goal is to generate {number_of_queries} search queries that will help gather comprehensive information about the section topic. 
 
 The queries should:
 
 1. Be related to the topic 
-2. Examine different aspects of the topic
+2. Examine different aspects of the topic with a focus on implementation
+3. Find specific examples, templates, and step-by-step guides
+4. Uncover practical resources and implementation best practices
+5. Target efficient approaches and proven methodologies
 
-Make the queries specific enough to find high-quality, relevant sources.
+Make the queries specific enough to find high-quality, relevant resources that provide detailed instructions, reusable tools, and practical examples that can be directly applied.
 </Task>
 """
 
-section_writer_instructions = """Write one section of a research report.
+section_writer_instructions = """Write one section of a {document_type}.
 
 <Task>
-1. Review the report topic, section name, and section topic carefully.
+1. Review the topic, section name, and section topic carefully.
 2. If present, review any existing section content. 
 3. Then, look at the provided Source material.
-4. Decide the sources that you will use it to write a report section.
-5. Write the report section and list your sources. 
+4. Decide the sources that you will use to write this section.
+5. Write the section and list your sources. 
 </Task>
 
 <Writing Guidelines>
 - If existing section content is not populated, write from scratch
 - If existing section content is populated, synthesize it with the source material
-- Strict 150-200 word limit
-- Use simple, clear language
+- Important: do not add preamble. Begin exactly with the section title.
+- Keep it to a 300 word limit unless there is a good reason to exceed it
+- Use simple, clear language optimized for implementation
 - Use short paragraphs (2-3 sentences max)
 - Use ## for section title (Markdown format)
+- Include specific examples, code snippets, templates, or step-by-step procedures when relevant
+- Focus on detailed implementation guidance with concrete steps
+- For technical content, include working examples with clear instructions
+- For practical content, include resource links and implementation checklists when possible
 </Writing Guidelines>
 
 <Citation Rules>
@@ -122,13 +153,19 @@ section_writer_instructions = """Write one section of a research report.
 1. Verify that EVERY claim is grounded in the provided Source material
 2. Confirm each URL appears ONLY ONCE in the Source list
 3. Verify that sources are numbered sequentially (1,2,3...) without any gaps
+4. Ensure the section includes clear, specific implementation guidance
 </Final Check>
 """
 
-section_writer_inputs=""" 
-<Report topic>
+section_writer_inputs = """ 
+
+<Document-Type>
+{document_type}
+</Document-Type>
+
+<Topic>
 {topic}
-</Report topic>
+</Topic>
 
 <Section name>
 {section_name}
@@ -147,41 +184,52 @@ section_writer_inputs="""
 </Source material>
 """
 
-section_grader_instructions = """Review a report section relative to the specified topic:
+section_grader_instructions = """Review a {document_type} section relative to the specified topic:
 
-<Report topic>
+<Topic>
 {topic}
-</Report topic>
+</Topic>
 
-<section topic>
+<Section topic>
 {section_topic}
-</section topic>
+</Section topic>
 
-<section content>
+<Section content>
 {section}
-</section content>
+</Section content>
 
-<task>
-Evaluate whether the section content adequately addresses the section topic.
+<Document-Objective>
+{objective}
+</Document-Objective>
 
-If the section content does not adequately address the section topic, generate {number_of_follow_up_queries} follow-up search queries to gather missing information.
-</task>
+<Task>
+Evaluate whether the section content adequately addresses the section topic and provides detailed, step-by-step implementation guidance.
 
-<format>
+Evaluation criteria:
+1. Relevance to the section topic
+2. Clarity and specificity of instructions
+3. Inclusion of practical examples, templates, or resources
+4. Step-by-step implementation guidance
+5. Useful tactics and implementation tips
+
+If the section content does not adequately address the section topic or lacks detailed implementation guidance, generate {number_of_follow_up_queries} follow-up search queries to gather missing information.
+</Task>
+
+<Format>
     grade: Literal["pass","fail"] = Field(
         description="Evaluation result indicating whether the response meets requirements ('pass') or needs revision ('fail')."
     )
     follow_up_queries: List[SearchQuery] = Field(
         description="List of follow-up search queries.",
     )
-</format>
+</Format>
 """
 
-final_section_writer_instructions="""You are an expert technical writer crafting a section that synthesizes information from the rest of the report.
+final_section_writer_instructions = """You are an expert technical writer crafting a section that synthesizes information from the rest of the {document_type}.
 
-<Report topic>
+<Topic>
 {topic}
-</Report topic>
+</Topic>
 
 <Section name>
 {section_name}
@@ -191,48 +239,53 @@ final_section_writer_instructions="""You are an expert technical writer crafting
 {section_topic}
 </Section topic>
 
-<Available report content>
+<Document-Objective>
+{objective}
+</Document-Objective>
+
+<Available content>
 {context}
-</Available report content>
+</Available content>
 
 <Task>
 1. Section-Specific Approach:
 
 For Introduction:
-- Use # for report title (Markdown format)
-- 50-100 word limit
-- Write in simple and clear language
-- Focus on the core motivation for the report in 1-2 paragraphs
-- Use a clear narrative arc to introduce the report
+- Use # for title (Markdown format)
+- 200 word limit
+- Write in simple, clear language
+- Highlight what the reader will be able to accomplish with these instructions and how they should be able to use it.
 - Include NO structural elements (no lists or tables)
 - No sources section needed
 
 For Conclusion/Summary:
 - Use ## for section title (Markdown format)
-- 100-150 word limit
-- For comparative reports:
-    * Must include a focused comparison table using Markdown table syntax
-    * Table should distill insights from the report
-    * Keep table entries clear and concise
-- For non-comparative reports: 
-    * Only use ONE structural element IF it helps distill the points made in the report:
-    * Either a focused table comparing items present in the report (using Markdown table syntax)
-    * Or a short list using proper Markdown list syntax:
-      - Use `*` or `-` for unordered lists
-      - Use `1.` for ordered lists
-      - Ensure proper indentation and spacing
-- End with specific next steps or implications
+- 300 word limit
+- For technical implementation topics:
+    * Include a focused implementation checklist or key steps summary using Markdown list syntax
+    * Highlight critical resources or tools mentioned in the guide
+- For process-oriented topics: 
+    * Only use ONE structural element that helps consolidate the guidance:
+    * Either a focused checklist of implementation steps (using Markdown list syntax)
+    * Or a quick-reference table of resources/tools with their purposes (using Markdown table syntax)
+    * Ensure proper indentation and spacing
+- End with clear next steps or immediate actions the reader can take
 - No sources section needed
 
 3. Writing Approach:
-- Use concrete details over general statements
-- Make every word count
-- Focus on your single most important point
+- Focus on practical, immediately applicable guidance
+- Emphasize concrete steps over theoretical concepts
+- Reference specific resources, templates, and tools when available
+- Ensure all instructions are clear and actionable
+- Include troubleshooting tips or common pitfalls where relevant
 </Task>
 
 <Quality Checks>
-- For introduction: 50-100 word limit, # for report title, no structural elements, no sources section
-- For conclusion: 100-150 word limit, ## for section title, only ONE structural element at most, no sources section
+- For introduction: 200 word limit, # for title, no structural elements, no sources section
+- For conclusion: 300 word limit, ## for section title, only ONE structural element at most, no sources section
 - Markdown format
+- Clear, step-by-step instructions
+- Specific resources or implementation tools
 - Do not include word count or any preamble in your response
+- Important: Output only the section content, no other text (i.e. no "Here is the section...", no "I'll review and enhance the existing section..." or anything like that)
 </Quality Checks>"""
